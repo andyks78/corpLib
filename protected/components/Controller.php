@@ -20,4 +20,18 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+        public function proceesDates($model){
+            $dc = Yii::app()->request->getParam('date_create');
+            if (($dc !== null) && (trim($dc) > 0)){
+                $model->date_create = $dc;
+            }
+            unset($dc);
+
+            $de = Yii::app()->request->getParam('date_eit');
+            if (($de !== null) && (trim($de) > 0)){
+                $model->date_edit = $de;
+            }
+            unset($de);
+        }
 }

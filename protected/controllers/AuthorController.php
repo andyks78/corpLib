@@ -137,17 +137,18 @@ class AuthorController extends Controller
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Author'])){
 			$model->attributes=$_GET['Author'];
-                        $dc = Yii::app()->request->getParam('date_create');
-                        if (($dc !== null) && (trim($dc) > 0)){
-                            $model->date_create = $dc;
-                        }
-                        unset($dc);
-
-                        $de = Yii::app()->request->getParam('date_eit');
-                        if (($de !== null) && (trim($de) > 0)){
-                            $model->date_edit = $de;
-                        }
-                        unset($de);
+                        $this->proceesDates($model);
+//                        $dc = Yii::app()->request->getParam('date_create');
+//                        if (($dc !== null) && (trim($dc) > 0)){
+//                            $model->date_create = $dc;
+//                        }
+//                        unset($dc);
+//
+//                        $de = Yii::app()->request->getParam('date_eit');
+//                        if (($de !== null) && (trim($de) > 0)){
+//                            $model->date_edit = $de;
+//                        }
+//                        unset($de);
                 }
 
 		$this->render('admin',array(

@@ -13,7 +13,7 @@
  * @property BookAuthor[] $bookAuthors
  * @property BookReader[] $bookReaders
  */
-class BookGen extends baseModel
+class BookGen extends baseItemModel
 {
 	/**
 	 * @return string the associated database table name
