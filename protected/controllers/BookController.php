@@ -79,6 +79,26 @@ class BookController extends Controller
 		));
 	}
 
+        public function actionGetAuthors(){
+            $response = array('status'=>true);
+            $bookID = Yii::app()->request->getParam('book');
+
+            $cr = new CDbCriteria();
+            //$cr->compare('book', $bookID);
+
+//            if ($bookID === null){
+//                echo CJSON::encode($response);
+//                Yii::app()->end();
+//            }
+
+            $authors = Author::model()->findAll($cr);
+
+            $response['text'] = $this->renderPartial('bookAuthorView', array('authorList'=>$authors), true, false);
+
+            echo CJSON::encode($response);
+
+        }
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.

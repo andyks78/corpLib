@@ -1,28 +1,62 @@
-CREATE TABLE tbl_user (
-    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(128) NOT NULL,
-    password VARCHAR(128) NOT NULL,
-    email VARCHAR(128) NOT NULL
-);
+CREATE DATABASE `corp_lib`
+    CHARACTER SET 'utf8'
+    COLLATE 'utf8_general_ci';
 
-INSERT INTO tbl_user (username, password, email) VALUES ('test1', 'pass1', 'test1@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test2', 'pass2', 'test2@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test3', 'pass3', 'test3@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test4', 'pass4', 'test4@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test5', 'pass5', 'test5@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test6', 'pass6', 'test6@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test7', 'pass7', 'test7@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test8', 'pass8', 'test8@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test9', 'pass9', 'test9@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test10', 'pass10', 'test10@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test11', 'pass11', 'test11@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test12', 'pass12', 'test12@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test13', 'pass13', 'test13@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test14', 'pass14', 'test14@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test15', 'pass15', 'test15@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test16', 'pass16', 'test16@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test17', 'pass17', 'test17@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test18', 'pass18', 'test18@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test19', 'pass19', 'test19@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test20', 'pass20', 'test20@example.com');
-INSERT INTO tbl_user (username, password, email) VALUES ('test21', 'pass21', 'test21@example.com');
+	
+CREATE TABLE `author` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` TEXT COLLATE utf8_general_ci NOT NULL,
+  `date_create` INTEGER(11) NOT NULL,
+  `date_edit` INTEGER(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+ALTER TABLE `author` ADD UNIQUE `uniq_name` (`name`(1));
+
+
+CREATE TABLE `book` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` TEXT COLLATE utf8_general_ci NOT NULL,
+  `date_create` INTEGER(11) NOT NULL,
+  `date_edit` INTEGER(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+ALTER TABLE `book` ADD UNIQUE `uniq_name` (`name`(1));
+
+
+CREATE TABLE `reader` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` TEXT COLLATE utf8_general_ci NOT NULL,
+  `date_create` INTEGER(11) NOT NULL,
+  `date_edit` INTEGER(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+ALTER TABLE `reader` ADD UNIQUE `uniq_name` (`name`(1));
+
+
+CREATE TABLE `book_author` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `book` BIGINT(20) NOT NULL,
+  `author` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+ALTER TABLE `book_author` ADD INDEX  (`book`);
+ALTER TABLE `book_author` ADD CONSTRAINT `book_author_fk2book` FOREIGN KEY (`book`) REFERENCES `book` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `book_author` ADD INDEX  (`author`);
+ALTER TABLE `book_author` ADD CONSTRAINT `book_author_fk2author` FOREIGN KEY (`author`) REFERENCES `author` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+CREATE TABLE `book_reader` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `book` BIGINT(20) NOT NULL,
+  `reader` BIGINT(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+ALTER TABLE `book_reader` ADD INDEX  (`book`);
+ALTER TABLE `book_reader` ADD CONSTRAINT `book_reader_fk2book` FOREIGN KEY (`book`) REFERENCES `book` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `book_reader` ADD INDEX  (`reader`);
+ALTER TABLE `book_reader` ADD CONSTRAINT `book_reader_fk2reader` FOREIGN KEY (`reader`) REFERENCES `reader` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
