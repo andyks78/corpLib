@@ -28,3 +28,12 @@ $this->widget('zii.widgets.CDetailView', array(
 		'date_edit',
 	),
 )); ?>
+
+<h2>Books</h2>
+<?php
+$bookDP = new CArrayDataProvider($model->bookAuthors);
+    $this->widget('zii.widgets.CListView', array(
+	'dataProvider'=>$bookDP,
+	'itemView'=>'/bookAuthor/_viewBooks',
+    ));
+?>

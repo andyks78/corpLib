@@ -27,3 +27,12 @@ $this->menu=array(
 		'date_edit',
 	),
 )); ?>
+
+<h2>Authors</h2>
+<?php
+$authorDP = new CArrayDataProvider($model->bookAuthors, array());
+    $this->widget('zii.widgets.CListView', array(
+	'dataProvider'=>$authorDP,
+	'itemView'=>'/bookAuthor/_viewAuthors',
+    ));
+?>
