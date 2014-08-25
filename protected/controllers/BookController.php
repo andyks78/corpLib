@@ -81,20 +81,24 @@ class BookController extends Controller
 
         public function actionGetAuthors(){
             $response = array('status'=>true);
-            $bookID = Yii::app()->request->getParam('book');
 
             $cr = new CDbCriteria();
-            //$cr->compare('book', $bookID);
+            $authorsStr = Yii::app()->request->getParam('aids');
+            $authorsIDS = array();
+            if ($authorsStr !== null){
+                $authorsIDS = explode(',', $authorsStr);
+            }
 
-//            if ($bookID === null){
-//                echo CJSON::encode($response);
-//                Yii::app()->end();
-//            }
+            $cr->addNotInCondition('id', $authorsIDS);
 
             $authors = Author::model()->findAll($cr);
-
-            $response['text'] = $this->renderPartial('bookAuthorView', array('authorList'=>$authors), true, false);
-
+            if (count($authors) == 0){
+                $response['status'] = false;
+                $response['errors'][] = 'authors not found for this book';
+            }
+            else{
+                $response['text'] = $this->renderPartial('bookAuthorView', array('authorList'=>$authors), true, false);
+            }
             echo CJSON::encode($response);
 
         }

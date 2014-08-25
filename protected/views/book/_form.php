@@ -56,9 +56,9 @@ Yii::app()->clientScript->registerCoreScript('jquery');
     $('#addAuthor').live('click', function(){
 
         var selProp = [];
-//        $('#authorTable').find('input:hidden').each(function(){
-//            selProp.push($(this).val());
-//        });
+        $('#authorTable').find('input:hidden').each(function(){
+            selProp.push($(this).val());
+        });
 
         $('#authorTable').find('select').each(function(){
             selProp.push( $('option:selected', this).val());
@@ -68,20 +68,18 @@ Yii::app()->clientScript->registerCoreScript('jquery');
         $.ajax({
                 type: "POST",
                 url: "<?= Yii::app()->createurl('book/getAuthors') ?>",
-                data : {pids : selProp.join(',')},
+                data : {aids : selProp.join(',')},
                 dataType : 'json',
                 success: function(response){
                     if (response.status === true){
                         $("#authorTable tr:last").after(response.text)
                     } else{
                         $.each(response.errors, function (k,v) {
-                            //toastr.error(v.toString());
-                            alert('error '+v.toString());
+                            alert('error :'+v.toString());
                         });
                     }
                 },
                 error: function(){
-                    //toastr.error('server error');
                     alert('server error');
                     return false;
                 }

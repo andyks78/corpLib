@@ -1,16 +1,11 @@
 <?php
-//$model = new Item();
-
-//CHtml::textField($name)
-//$atr = 'propval';
-
 $idx = isset($bookAuthor->id) ? $bookAuthor->id : time();
 ?>
 <tr id="">
     <td>
         <?php if ( ! isset($authorList))  : ?>
             <?= $bookAuthor->author0->name ?>
-            <input type="hidden" name="Book[Author][<?= $idx ?>]" value="<?= $bookAuthor->id ?>">
+            <input type="hidden" name="Book[Author][<?= $idx ?>]" value="<?= $bookAuthor->author0->id ?>">
         <?php
         else :
             echo CHtml::dropDownList('Book[Author]['.$idx.']', null, CHtml::listData($authorList, 'id', 'name'));
