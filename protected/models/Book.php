@@ -3,6 +3,16 @@
 class Book extends BookGen
 {
 
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID book',
+			'name' => 'Name of book',
+			'date_create' => 'Date Create book',
+			'date_edit' => 'Date Edit book',
+		);
+	}
+
 	public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that

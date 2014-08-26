@@ -56,6 +56,89 @@ class ReaderController extends Controller
 		));
 	}
 
+        /*
+         * выдача книги
+         * сохраняет связь читателя с книгой
+         */
+        public function actionAddBook(){
+
+            $response = array('status'=>true);
+            $readerID = Yii::app()->request->getParam('reader');
+            $bookID = Yii::app()->request->getParam('book');
+
+            if (($bookID === null) || ($readerID === null)){
+                $response['status'] = false;
+                $response['errors'] = array('book or reader empty');
+            }
+            else{
+                $b2r = new BookReader();
+                $b2r->book = $bookID;
+                $b2r->reader = $readerID;
+                if ($b2r->save()){
+                    $response['text'] = $this->renderPartial('_booksReaderView', array('data'=>$b2r), true);
+                }
+                else{
+                    $response['errors'] = array('error add book on reader');
+                }
+            }
+            echo CJSON::encode($response);
+        }
+
+        public function actionReturnBook(){
+            $response = array('status'=>false);
+            $id = Yii::app()->request->getParam('id');
+            if ($id !== null){
+                $model = BookReader::model()->findByPk($id);
+                if ($model !== null){
+                    if ($model->delete()){
+                        $response['status'] = true;
+                    }
+                    else{
+                        $response['errors'] = array('book not returned');
+                    }
+                }
+                else{
+                    $response['errors'] = array('book not found for return');
+                }
+            }
+            else{
+                $response['errors'] = array('params not found');
+            }
+            echo CJSON::encode($response);
+        }
+	/**
+	 * Получает списко книг для выдачи читателю
+	 * + наверно одну и туже книзу нельзя выдать двум сразу? ;))
+         * так что код читателя можно не получать ..
+	 */
+	public function actionGetFreeBooks()
+	{
+            $response = array('status'=>true);
+
+
+
+            // в запросе если юзать NOT IN мускул тормозит ..
+            // выберем отдельно ИД выданных книг .. будет быстрее
+            $b2rList = BookReader::model()->findAll();
+            $b2rArr = array();
+            foreach ($b2rList as $b2r){
+                $b2rArr[] = $b2r->book;
+            }
+
+            $cr = new CDbCriteria();
+            $cr->addNotInCondition('id', $b2rArr);
+
+            $bookList = Book::model()->findAll($cr);
+            if (count($bookList) > 0){
+                $response['text'] = CHtml::dropDownList('book', null, CHtml::listData($bookList, 'id', 'name'));
+            }
+            else{
+                $response['status'] = false;
+                $response['errors'] = array('book ended');
+            }
+            echo CJSON::encode($response);
+	}
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
