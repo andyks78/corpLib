@@ -7,7 +7,7 @@
  * @author qwerty
  */
 class baseItemModel extends baseModel {
-    
+
     public function searchAdmin()
     {
             $criteria=new CDbCriteria;
@@ -62,18 +62,43 @@ class baseItemModel extends baseModel {
         }
     }
 
-    public function behaviors(){
-        return CMap::mergeArray(parent::behaviors(),
-                array(
-                'CTimestampBehavior' => array(
-                            'class' => 'zii.behaviors.CTimestampBehavior',
-                            'createAttribute' => 'date_create',
-                            'updateAttribute' => 'date_edit',
-                            'timestampExpression' => time(),//'date("Y-m-d H:i:s")',
-                            'setUpdateOnCreate' => true,
-                        ),
-                    )
-                );
+    // гребет его на сохранении - сбрасывает дату создания в 0 ??
+    // из за того что там строка человечной даты по крайней мере для ИНТ полей!!!!
+//    public function behaviors(){
+//        return CMap::mergeArray(parent::behaviors(),
+//                array(
+//                'CTimestampBehavior' => array(
+//                            'class' => 'zii.behaviors.CTimestampBehavior',
+//                            'createAttribute' => 'date_create',
+//                            'updateAttribute' => 'date_edit',
+//                            'timestampExpression' => time(),//'date("Y-m-d H:i:s")',
+//                            //'setUpdateOnCreate' => true,
+//                        ),
+//                    )
+//                );
+//    }
+
+    public function beforeSave() {
+        if (parent::beforeSave()){
+            $time = time();
+            if ($this->isNewRecord){
+                if (array_key_exists('date_create', $this->attributes)){
+                    $this->date_create = $time;
+                }
+            }
+            else{
+                // после нахождения - переводит в строку - вернем назад
+                $this->date_create = CDateTimeParser::parse($this->date_create,'yyyy-MM-dd HH:mm:ss');
+            }
+
+            if (array_key_exists('date_edit', $this->attributes)){
+                $this->date_edit = $time;
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 

@@ -42,15 +42,72 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'reader-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$model->searchAdmin(),
+        'afterAjaxUpdate' => 'reinstallDatePicker',
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
 		'name',
-		'date_create',
-		'date_edit',
+		array(
+                    'name'=>'date_create',
+                    'filter'=>
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'=>$model,
+                            'attribute'=>'date_create',
+                            'language' => 'en',
+                            'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+                            'htmlOptions' => array(
+                                'id' => 'datepicker_for_date_create',
+                                'size' => '10',
+                            ),
+                            'defaultOptions' => array(  // (#3)
+                                'showOn' => 'focus',
+                                'dateFormat' => 'yy-mm-dd',
+                                'showOtherMonths' => true,
+                                'selectOtherMonths' => true,
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                                'showButtonPanel' => true,
+                            )
+                        ),
+                        true
+                      ),
+                ),
+		array(
+                    'name'=>'date_edit',
+                    'filter'=>
+                        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model'=>$model,
+                            'attribute'=>'date_edit',
+                            'language' => 'en',
+                            'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+                            'htmlOptions' => array(
+                                'id' => 'datepicker_for_date_edit',
+                                'size' => '10',
+                            ),
+                            'defaultOptions' => array(  // (#3)
+                                'showOn' => 'focus',
+                                'dateFormat' => 'yy-mm-dd',
+                                'showOtherMonths' => true,
+                                'selectOtherMonths' => true,
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                                'showButtonPanel' => true,
+                            )
+                        ),
+                        true
+                      ),
+                ),
 		array(
 			'class'=>'CButtonColumn',
 		),
 	),
-)); ?>
+));
+
+Yii::app()->clientScript->registerScript('re-install-date-picker', "
+function reinstallDatePicker(id, data) {
+    $('#datepicker_for_date_create, #datepicker_for_date_edit').datepicker();
+}
+");
+
+?>

@@ -43,6 +43,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'book-grid',
 	'dataProvider'=>$model->searchAdmin(),
+        'afterAjaxUpdate' => 'reinstallDatePicker',
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
@@ -101,4 +102,12 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 			'class'=>'CButtonColumn',
 		),
 	),
-)); ?>
+));
+
+Yii::app()->clientScript->registerScript('re-install-date-picker', "
+function reinstallDatePicker(id, data) {
+    $('#datepicker_for_date_create, #datepicker_for_date_edit').datepicker();
+}
+");
+
+?>

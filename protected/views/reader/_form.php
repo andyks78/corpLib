@@ -25,18 +25,6 @@
 		<?php echo $form->error($model,'name'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'date_create'); ?>
-		<?php echo $form->textField($model,'date_create'); ?>
-		<?php echo $form->error($model,'date_create'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'date_edit'); ?>
-		<?php echo $form->textField($model,'date_edit'); ?>
-		<?php echo $form->error($model,'date_edit'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

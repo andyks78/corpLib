@@ -23,12 +23,32 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'date_create'); ?>
-		<?php echo $form->textField($model,'date_create'); ?>
+		<?php
+                    //echo $form->dateField($model,'date_create');
+                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'name'=>'date_create',  // name of post parameter
+                        'value'=>Yii::app()->request->getParam('Author[\'date_create\']'),  // value comes from cookie after submittion
+                         'options'=>array(
+                            'showAnim'=>'fold',
+                            'dateFormat'=>'yy-mm-dd',
+                        ),
+                    ));
+                ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'date_edit'); ?>
-		<?php echo $form->textField($model,'date_edit'); ?>
+		<?php
+                    //echo $form->textField($model,'date_edit');
+                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'name'=>'date_edit',  // name of post parameter
+                        'value'=>Yii::app()->request->getParam('Author[\'date_edit\']'),  // value comes from cookie after submittion
+                         'options'=>array(
+                            'showAnim'=>'fold',
+                            'dateFormat'=>'yy-mm-dd',
+                        ),
+                    ));
+                ?>
 	</div>
 
 	<div class="row buttons">

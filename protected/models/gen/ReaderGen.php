@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property BookReader[] $bookReaders
  */
-class ReaderGen extends baseModel
+class ReaderGen extends baseItemModel
 {
 	/**
 	 * @return string the associated database table name

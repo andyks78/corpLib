@@ -28,10 +28,11 @@ class Controller extends CController
             }
             unset($dc);
 
-            $de = Yii::app()->request->getParam('date_eit');
+            $de = Yii::app()->request->getParam('date_edit');
             if (($de !== null) && (trim($de) > 0)){
                 $model->date_edit = $de;
             }
             unset($de);
+            //return $model;
         }
 }
