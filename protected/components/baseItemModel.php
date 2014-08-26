@@ -7,6 +7,7 @@
  * @author qwerty
  */
 class baseItemModel extends baseModel {
+    
     public function searchAdmin()
     {
             $criteria=new CDbCriteria;

@@ -53,6 +53,10 @@ Yii::app()->clientScript->registerCoreScript('jquery');
 ?>
 
 <script>
+    $('#delAuthor').live('click', function(){
+        $(this).closest('tr').remove();
+    });
+
     $('#addAuthor').live('click', function(){
 
         var selProp = [];

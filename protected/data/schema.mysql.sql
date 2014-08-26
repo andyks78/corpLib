@@ -2,7 +2,7 @@ CREATE DATABASE `corp_lib`
     CHARACTER SET 'utf8'
     COLLATE 'utf8_general_ci';
 
-	
+
 CREATE TABLE `author` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `name` TEXT COLLATE utf8_general_ci NOT NULL,
@@ -11,7 +11,6 @@ CREATE TABLE `author` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
-ALTER TABLE `author` ADD UNIQUE `uniq_name` (`name`(1));
 
 
 CREATE TABLE `book` (
@@ -22,7 +21,7 @@ CREATE TABLE `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
-ALTER TABLE `book` ADD UNIQUE `uniq_name` (`name`(1));
+
 
 
 CREATE TABLE `reader` (
@@ -33,7 +32,7 @@ CREATE TABLE `reader` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
-ALTER TABLE `reader` ADD UNIQUE `uniq_name` (`name`(1));
+
 
 
 CREATE TABLE `book_author` (
@@ -60,3 +59,6 @@ ALTER TABLE `book_reader` ADD INDEX  (`book`);
 ALTER TABLE `book_reader` ADD CONSTRAINT `book_reader_fk2book` FOREIGN KEY (`book`) REFERENCES `book` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `book_reader` ADD INDEX  (`reader`);
 ALTER TABLE `book_reader` ADD CONSTRAINT `book_reader_fk2reader` FOREIGN KEY (`reader`) REFERENCES `reader` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `book_author` ADD UNIQUE `uniq_idx` (`book`, `author`);
+ALTER TABLE `book_reader` ADD UNIQUE `uniq_idx` (`book`, `reader`);

@@ -70,8 +70,33 @@ class BookController extends Controller
 		if(isset($_POST['Book']))
 		{
 			$model->attributes=$_POST['Book'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                        $errorText = 'Error save to DB';
+                        $transaction=$model->dbConnection->beginTransaction();
+                        try {
+                            if($model->save()){
+                                if (isset($_POST['Book']['Author'])){
+                                    foreach ($_POST['Book']['Author'] as $aKey=>$aVal){
+                                        // новый автор .. добавим связку
+                                        $b2aModel = new BookAuthor();
+                                        $b2aModel->book = $model->id;
+                                        $b2aModel->author = $aVal;
+                                        if (! $b2aModel->save()){
+                                            $errorText = 'error add authors to book';
+                                            throw new Exception($errorText);
+                                        }
+                                    }
+                                }
+                                $transaction->commit();
+                                $this->redirect(array('view','id'=>$model->id));
+                            }
+                            else{
+                                throw new Exception('error save book');
+                            }
+                        }
+                        catch (Exception $e){
+                            $model->addError('common', $errorText);
+                            $transaction->rollback();
+                        }
 		}
 
 		$this->render('create',array(
@@ -79,6 +104,81 @@ class BookController extends Controller
 		));
 	}
 
+
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionUpdate($id)
+	{
+		$model=$this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Book']))
+		{
+			$model->attributes=$_POST['Book'];
+
+                        $errorText = 'Error save to DB';
+                        $transaction=$model->dbConnection->beginTransaction();
+                        try {
+                            if($model->save()){
+                                if (isset($_POST['Book']['Author'])){
+                                    // соберем ИД связок ... что бы знать что удалять
+                                    $removeB2A = array();
+                                    foreach ($model->bookAuthors as $b2a){
+                                        $removeB2A[$b2a->id] = $b2a->author;
+                                    }
+                                    foreach ($_POST['Book']['Author'] as $aKey=>$aVal){
+                                        if ($aKey > $model::MIN_ID){
+                                            // новый автор .. добавим связку
+                                            $b2aModel = new BookAuthor();
+                                            $b2aModel->book = $model->id;
+                                            $b2aModel->author = $aVal;
+                                            if (! $b2aModel->save()){
+                                                $errorText = 'error add authors to book';
+                                                throw new Exception($errorText);
+                                            }
+                                        }
+                                        else{
+                                            if (array_key_exists($aKey, $removeB2A)){
+                                                unset($removeB2A[$aKey]);
+                                            }
+                                        }
+                                    }
+                                    // удалим авторов, которых удалили на клиенте ...
+                                    foreach ($removeB2A as $rKey=>$rVal){
+                                        if ( ! BookAuthor::model()->deleteByPk($rKey)){
+                                            $errorText = 'error remove authors from book';
+                                            throw new Exception($errorText);
+                                        }
+                                    }
+                                }
+                                $transaction->commit();
+                                $this->redirect(array('view','id'=>$model->id));
+                            }
+                            else{
+                                throw new Exception('error save book');
+                            }
+                        }
+                        catch (Exception $e){
+                            // записать в лог $e->getMessage();
+                            $model->addError('common', $errorText);
+                            $transaction->rollback();
+                        }
+		}
+
+		$this->render('update',array(
+			'model'=>$model,
+		));
+	}
+
+        /**
+         * Получение HTML для выбора автора при редактировании книги
+         *
+         */
         public function actionGetAuthors(){
             $response = array('status'=>true);
 
@@ -102,30 +202,6 @@ class BookController extends Controller
             echo CJSON::encode($response);
 
         }
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Book']))
-		{
-			$model->attributes=$_POST['Book'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
 
 	/**
 	 * Deletes a particular model.

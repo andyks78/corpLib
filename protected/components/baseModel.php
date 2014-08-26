@@ -2,6 +2,7 @@
 class baseModel extends CActiveRecord
 {
 
+    const MIN_ID = 1400000000;
     const ENCODE = 'UTF-8';
     const PAGE_SIZE = 25;
     const CACHE_TIMEOUT = 100000000; //
