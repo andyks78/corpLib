@@ -63,7 +63,7 @@ $this->menu=array(
 
 <h2>Book this reader</h2>
 <?php
-$bookDP = new CArrayDataProvider($model->bookReaders);
+    $bookDP = new CArrayDataProvider($model->bookReaders);
     $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$bookDP,
 	'itemView'=>'_booksReaderView',

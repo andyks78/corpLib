@@ -2,8 +2,19 @@
 
 class Book extends BookGen
 {
+    public function reportRandom5(){
 
-	public function relations()
+        $cr = new CDbCriteria();
+        $cr->limit = 5;
+        $cr->order = 'RAND()'; // так делать нерекомендуют на больших объмах ;))
+
+        return new CActiveDataProvider($this, array(
+                'criteria'=>$cr,
+                'pagination'=>false,
+        ));
+    }
+
+    public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
