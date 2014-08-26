@@ -2,6 +2,20 @@
 
 class Reader extends ReaderGen
 {
+
+        public function beforeDelete() {
+            if (parent::beforeDelete()){
+                // удалим связи с читаемыми книгами
+                foreach ($this->bookReaders as $br){
+                    if ( ! $br->delete()){
+                        throw new CDbException(implode(',', $br->getErrors()));
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
 	public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
@@ -15,7 +29,7 @@ class Reader extends ReaderGen
 			array('id, name, date_create, date_edit', 'safe', 'on'=>'search'),
 		);
 	}
-        
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

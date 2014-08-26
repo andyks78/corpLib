@@ -110,11 +110,28 @@ class AuthorController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+            // удаляем из нескольких таблиц - надо удалить ВСЕ ...
+            $transaction = $model->dbConnection->beginTransaction();
+            try
+            {
+                if ($model->delete()){
+                    $transaction->commit();
+                }
+                else{
+                    throw new CDbException('error delete author');
+                }
+            }
+            catch (CDbException $e){
+                $transaction->rollback();
+                // не здаем кому попало что конкретнее случилось надо писать в отдельный лог
+                throw new Exception('error delete reader');
+            }
+
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if(!isset($_GET['ajax']))
+                    $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**

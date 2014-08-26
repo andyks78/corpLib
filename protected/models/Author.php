@@ -3,6 +3,19 @@
 class Author extends AuthorGen
 {
 
+    public function beforeDelete() {
+        if (parent::beforeDelete()){
+            // удалим связи с книгами
+            foreach ($this->bookAuthors as $ba){
+                if ( ! $ba->delete()){
+                    throw new CDbException(implode(',', $ba->getErrors()));
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public function report3Readers(){
         $sql = '
             	SELECT
