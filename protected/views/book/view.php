@@ -28,6 +28,24 @@ $this->menu=array(
 	),
 )); ?>
 
+<?php if (isset($model->bookReader->reader0->id)) : ?>
+<h2>Current reader</h2>
+<?php
+$this->widget('zii.widgets.CDetailView', array(
+	'data'=>$model->bookReader->reader0,
+	'attributes'=>array(
+		'id',
+		'name',
+		'date_create',
+		'date_edit',
+	),
+));
+
+else:
+?>
+<h2>Book in library</h2>
+<?php endif; ?>
+
 <h2>Authors</h2>
 <?php
 $authorDP = new CArrayDataProvider($model->bookAuthors, array());

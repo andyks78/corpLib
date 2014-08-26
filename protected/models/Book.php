@@ -14,6 +14,42 @@ class Book extends BookGen
         ));
     }
 
+    public function report3Authors(){
+
+        $sql = '
+            SELECT
+                b.id, b.name, b.date_create, b.date_edit
+            FROM
+                book b, book_author ba, book_reader br
+            WHERE
+                b.id = br.book
+                AND b.id = ba.book
+            GROUP BY b.id, b.name, b.date_create, b.date_edit
+            HAVING COUNT(ba.id) > 2
+        ';
+        $command = $this->getDbConnection()->createCommand($sql);
+        $rows = $command->queryAll();
+        return new CArrayDataProvider($this->populateRecords($rows));
+    }
+
+    public function beforeDelete() {
+        if (parent::beforeDelete()){
+            // удалим связи с авторами
+            foreach ($this->bookAuthors as $ba){
+                if ( ! $ba->delete()){
+                    throw new CDbException(implode(',', $ba->getErrors()));
+                }
+            }
+            // удалим связи с читателем
+            if ( ! $this->bookReader->delete()){
+                throw new CDbException(implode(',', $this->bookReader->getErrors()));
+            }
+
+            return true;
+        }
+        return false;
+    }
+
     public function relations()
 	{
 		// NOTE: you may need to adjust the relation name and the related

@@ -3,33 +3,23 @@
 class Author extends AuthorGen
 {
 
-    // уехало в baseModel
-//	public function searchAdmin()
-//	{
-//		$criteria=new CDbCriteria;
-//		$criteria->compare('id',$this->id,true);
-//		$criteria->compare('name',$this->name,true);
-//                if ($this->date_create !== null){
-//                    $dtStart = CDateTimeParser::parse($this->date_create,'yyyy-MM-dd');
-//                    if ($dtStart !== false){
-//                        $dtEnd = $dtStart + 86400 ; // + 1 день
-//                        $criteria->addBetweenCondition('date_create', $dtStart , $dtEnd);
-//                    }
-//                }
-//		//$criteria->compare('date_create',$this->date_create);
-//                if ($this->date_edit !== null){
-//                    $dtStart = CDateTimeParser::parse($this->date_edit,'yyyy-MM-dd');
-//                    if ($dtStart !== false){
-//                        $dtEnd = $dtStart + 86400 ; // + 1 день
-//                        $criteria->addBetweenCondition('date_edit', $dtStart , $dtEnd);
-//                    }
-//                }
-//		//$criteria->compare('date_edit',$this->date_edit);
-//
-//		return new CActiveDataProvider($this, array(
-//			'criteria'=>$criteria,
-//		));
-//	}
+    public function report3Readers(){
+        $sql = '
+            	SELECT
+                    a.id, a.name, a.date_create, a.date_edit
+                FROM
+                    book_author ba, book_reader br, author a
+                WHERE
+                    a.id = ba.author
+                    AND br.book =  ba.book
+                GROUP BY a.id, a.name, a.date_create, a.date_edit
+                HAVING COUNT(br.id) > 2
+        ';
+
+        $command = $this->getDbConnection()->createCommand($sql);
+        $rows = $command->queryAll();
+        return new CArrayDataProvider($this->populateRecords($rows));
+    }
 
 	public function rules()
 	{

@@ -210,7 +210,24 @@ class BookController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+            $model = $this->loadModel($id);
+
+                // удаляем из нескольких таблиц - надо удалить ВСЕ ...
+                $transaction = $model->dbConnection->beginTransaction();
+                try
+                {
+                    if ($model->delete()){
+                        $transaction->commit();
+                    }
+                    else{
+                        throw new CDbException('error delete book');
+                    }
+                }
+                catch (CDbException $e){
+                    $transaction->rollback();
+                    // не здаем кому попало что конкретнее случилось надо писать в отдельный лог
+                    throw new Exception('error delete book');
+                }
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
