@@ -33,16 +33,6 @@ $this->menu=array(
 <br />
 <br />
 
-<h2>Book this reader</h2>
-<?php
-$bookDP = new CArrayDataProvider($model->bookReaders);
-    $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$bookDP,
-	'itemView'=>'_booksReaderView',
-        'htmlOptions'=>array('id'=>'readerBooksList'),
-    ));
-?>
-
 <div class="form" id="addBook2reader" style="display:none">
 
 <?php
@@ -70,6 +60,17 @@ $bookDP = new CArrayDataProvider($model->bookReaders);
 	</div>
 <?php $this->endWidget(); ?>
 </div>
+
+<h2>Book this reader</h2>
+<?php
+$bookDP = new CArrayDataProvider($model->bookReaders);
+    $this->widget('zii.widgets.CListView', array(
+	'dataProvider'=>$bookDP,
+	'itemView'=>'_booksReaderView',
+        'htmlOptions'=>array('id'=>'readerBooksList'),
+    ));
+?>
+
 
 <script>
     function returnBook(id, linkObj){
@@ -128,7 +129,8 @@ $bookDP = new CArrayDataProvider($model->bookReaders);
                 dataType : 'json',
                 success: function(response){
                     if (response.status === true){
-                        $("#selectBooks").html(response.text)
+                        $("#selectBooks").html(response.text);
+                        $('#addBook2reader').show();
                     } else{
                         $.each(response.errors, function (k,v) {
                             alert('error :'+v.toString());
@@ -141,6 +143,6 @@ $bookDP = new CArrayDataProvider($model->bookReaders);
                 }
             });
 
-        $('#addBook2reader').show();
+
     });
 </script>

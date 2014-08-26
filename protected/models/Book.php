@@ -3,6 +3,16 @@
 class Book extends BookGen
 {
 
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'bookAuthors' => array(self::HAS_MANY, 'BookAuthor', 'book'),
+			'bookReader' => array(self::HAS_ONE, 'BookReader', 'book'),
+		);
+	}
+
 	public function attributeLabels()
 	{
 		return array(
