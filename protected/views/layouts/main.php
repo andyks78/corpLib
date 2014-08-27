@@ -40,6 +40,13 @@
                                         array('label'=>'5 случайных книг', 'url'=>array('/report/randomBook5')),
                                         ),
                                 ),
+                                array('label'=>'Описания', 'url'=>'#',
+                                    'items'=>array(
+                                            array('label'=>'Работа с Библиотекой', 'url'=>array('/site/page', 'view'=>'help')),
+                                            array('label'=>'Полнотекстный поиск', 'url'=>array('/site/page', 'view'=>'search')),
+                                            array('label'=>'Счетчик посещений', 'url'=>array('/site/page', 'view'=>'counter')),
+                                        ),
+                                ),
 				//array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
 				//array('label'=>'Contact', 'url'=>array('/site/contact')),
 				//array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
